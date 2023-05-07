@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Block Fucking Sites",
+    "version": "1.0.1",
+
+    "action": {
+        "default_title": "Click to show an alert",
+        "default_popup": "./popup/popup.html"
+      },
+
+      "background": {
+        "service_worker": "background.js"
+      },
+      "declarative_net_request" : {
+        "rule_resources" : [{
+          "id": "ruleset_1",
+          "enabled": true,
+          "path": "rules.json"
+        }
+        ]},
+      "permissions": ["activeTab", "scripting", "declarativeNetRequest","browsingData","tabs","webNavigation","storage"]
+}

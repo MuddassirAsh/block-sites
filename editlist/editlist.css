@@ -1,0 +1,51 @@
+:root {
+    --bg-color: rgba(0, 0, 0, 0.05);
+    --code-color: #fcffda;
+    --bg: #fff;
+    --clc: #4d5156;
+    --border: #ccc;
+    --bg-active: #e7f9ff;
+    --bg-error: red;
+    --link: #07c;
+    --bg-input: #fff;
+    --clc-input: #000;
+    --admin-bg: #ffffed;
+    --admin-border: #e8ec3a;
+}
+
+.section-one{
+    margin-bottom: 2%;
+}
+
+.heading{
+    font-size: 18px;
+    margin-left: 0.5%;
+    color: #07c;
+    margin-bottom: 0.5%;
+    margin-top: 0.5%;
+}
+
+
+input[type=text]{
+    color: var(--clc);
+    background-color: var(--bg-input);
+    outline: none;
+    border: solid 1px var(--border);
+    padding: 2px;
+    box-sizing: border-box;
+    margin-left: 0.5%;
+}
+
+.remove-site{
+    margin-left: 0.3%;
+    font-size: 90%;
+}
+
+li{
+    margin-bottom: 0.5%;
+    margin-left: 0.3%;
+}
+
+#third-heading{
+    margin-top: 2%;
+}

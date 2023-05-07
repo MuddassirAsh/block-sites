@@ -1,0 +1,11 @@
+body{
+    white-space: nowrap;
+    height: 199px;
+}
+
+#logo{
+    display: block;
+    width: 12%;
+    margin-right: 2%;
+}
+
