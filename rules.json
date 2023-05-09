@@ -2,7 +2,7 @@
     {
       "id": 1,
       "priority": 1,
-      "action": { "type": "block" },    
+      "action": { "type": "allow" },    
       "condition": {"urlFilter": "evil.com", "resourceTypes": ["main_frame"] }
     }
 ]

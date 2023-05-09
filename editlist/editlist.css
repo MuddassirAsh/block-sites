@@ -37,15 +37,28 @@ input[type=text]{
 }
 
 .remove-site{
-    margin-left: 0.3%;
+    margin-left: 0.5%;
     font-size: 90%;
 }
 
 li{
     margin-bottom: 0.5%;
-    margin-left: 0.3%;
+    margin-left: 0.5%;
 }
 
 #third-heading{
     margin-top: 2%;
+}
+
+#user-input2{
+    margin-left: 0.5%;
+    width: 12%;
+}
+
+#user-input3{
+    width: 12%;
+}
+
+label{
+    margin-left: 0.5%;
 }
