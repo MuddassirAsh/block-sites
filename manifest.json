@@ -18,5 +18,5 @@
           "path": "rules.json"
         }
         ]},
-      "permissions": ["activeTab", "scripting", "declarativeNetRequest","browsingData","tabs","webNavigation","storage"]
+      "permissions": ["activeTab", "scripting", "declarativeNetRequest","browsingData","tabs","webNavigation","storage","alarms"]
 }

@@ -1,4 +1,12 @@
 document.getElementById('block-site-button').addEventListener('click', blockSite);
+document.getElementById('schedule-unblocking-button').addEventListener('click', scheduleUnBlocking);
+document.getElementById('schedule-blocking-button').addEventListener('click', scheduleBlocking);
+document.getElementById('user-input2').addEventListener('input', startInputValidation);
+document.getElementById('user-input3').addEventListener('input', endInputValidation);
+var start = document.getElementById('user-input2');
+var end = document.getElementById('user-input3');
+var inputIsValid = true;
+
 const ul = document.getElementById('block-list');
 let rules = [];
 var uniqueID;
@@ -59,15 +67,83 @@ async function unBlockSite (event){
     event.target.remove();
 }
 
-function scheduleBlocking(){
-    date = new Date();
-    chrome.alarms.create(
-        "unbBlockingSite",
-        {"delayinMinutes": 2321312321,
-         "periodInMinutes": 23321312321
-        })
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name == "unBlockingSiteSchedule"){
+        console.log("onalarm event listener function outside has ran");
+        console.log(date);
+    }
+})
+
+function startInputValidation() {
+        if (start.value != "" && end.value != "" && parseInt(start.value.substring(0,2)) > parseInt(end.value.substring(0,2))){  
+        start.setCustomValidity('Start time must be smaller than end time!');
+        start.reportValidity();
+        inputIsValid  = false;
+
+    }
+    else if (start.value != "" && end.value != "" && parseInt(start.value.substring(0,2)) == parseInt(end.value.substring(0,2))){
+        if (parseInt(start.value.substring(3,5)) == parseInt(end.value.substring(3,5))){
+            start.setCustomValidity('Start time should not be equal to end time');
+            start.reportValidity();
+            inputIsValid  = false;
+        }
+    }
+    else{
+        start.setCustomValidity('');
+        inputIsValid = true;
+    }
 }
 
-// chrome.alarms.onAlarm.addListener(
-//     callback: function,
-//   )
+function endInputValidation() {
+    if (start.value != "" && end.value != "" && parseInt(start.value.substring(0,2)) > parseInt(end.value.substring(0,2))){  
+        end.setCustomValidity('Start time must be smaller than end time!');
+         end.reportValidity();
+         inputIsValid  = false;
+     }
+     else if (start.value != "" && end.value != "" && parseInt(start.value.substring(0,2)) == parseInt(end.value.substring(0,2))){
+         if (parseInt(start.value.substring(3,5)) == parseInt(end.value.substring(3,5))){
+             end.setCustomValidity('Start time should not be equal to end time');
+             end.reportValidity();
+             inputIsValid  = false;
+         }
+         else if (parseInt(start.value.substring(3,5)) > parseInt(end.value.substring(3,5))){
+            end.setCustomValidity('Start time should not be greater than end time');
+            end.reportValidity();
+            inputIsValid  = false;
+         }
+     }
+     else{
+         end.setCustomValidity('');
+         inputIsValid = true;
+     }
+}
+
+function scheduleUnBlocking(){
+    // check if input is valid before executing logic
+    if (!inputIsValid) { 
+        console.error('Invalid input, cannot schedule unblocking');
+        return;
+    }
+    date = new Date();
+    // console.log(date);
+    //TODO: save submitted form values in localstorage so we can set them as default views on subesquent refresh
+    var from = document.getElementById('user-input2').value
+    var to = document.getElementById('user-input3').value
+
+    // console.log(from.substring(0,2));
+    var hourDiff = Math.abs(date.getHours() - parseInt(from.substring(0,2)));
+    // console.log(hourDiff+"hourDiff");
+    // var minDiff = Math.abs(date.getMinutes() - 60) + parseInt(from[3] + from[4]);
+    // console.log(hourDiff);
+    // console.log(minDiff);
+    // var startTimer = hourDiff * 60 + minDiff
+    // console.log(startTimer);
+    chrome.alarms.create("unBlockingSiteSchedule",{"delayInMinutes": 1,})
+    // there is 1440 minutes in 1 day
+}
+
+function scheduleBlocking(){
+    alert("schedule blocking");
+    chrome.alarms.create("blockingSiteSchedule",{"delayInMinutes": 1,})
+
+}
