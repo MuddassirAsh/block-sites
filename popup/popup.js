@@ -1,8 +1,23 @@
+var domainText;
+var idToRemove;
 document.getElementById('block-button').addEventListener('click', blockSite);
+document.getElementById('unblock-button').addEventListener('click', unblockSite);
 chrome.tabs.query({ active: true, currentWindow: true }, getSiteInfo); 
 var tabId;
 var origin;
+var validURL;
 var url;
+
+function isValidHttpUrl(string) {
+  try {
+    validURL = new URL(string);
+  } catch (error) {
+    console.log(error);
+    return false;  
+  }
+  return validURL.protocol === "http:" || validURL.protocol === "https:";
+}
+
 function getSiteInfo(tabs){
   tabId = tabs[0].id;
   var url = tabs[0].url;
@@ -16,27 +31,15 @@ function getSiteInfo(tabs){
   if (tabs[0].hasOwnProperty('url')){
       document.getElementById('domain').textContent = domainName;
   }
+  if (!isValidHttpUrl(url)){
+    console.log("valid URL")
+    document.getElementById('domain').textContent =  "Not available on this page.";
+  }
+
   if (domainName.length > 25){
     document.getElementById('domain').textContent = domainName.slice(0,20) + "...";
   }
 }
-
-// currently this function works sometimes and sometime it complains
-// about receiving a number, when only integers are allowed...
-// function generateUniqueID(){
-//   const timestamp = Date.now();
-//   const data = timestamp.toString() + url;
-//   // convert data to string because hash functon requires string
-//   const hash = CryptoJS.SHA256(data);
-//   //convert hash world array object into hex
-//   const hexString = hash.toString(CryptoJS.enc.Hex);
-//   // convert the first 8 digits of hex string into decimal (base 10)
-//   const id = parseInt(hexString.substr(0, 8), 16);
-//   // js represents all ints as floating points, chrome's api updateDynamicRules 
-//   // method complains about this and so we need to convert this number into a integer 
-//   // ensure that the generated integer is >= 1 and return it
-//    return Math.trunc(id);
-// }
 
 // adds domain to ruleset
 async function blockSite(){
@@ -94,3 +97,18 @@ async function blockSite(){
 }
 
 
+async function unblockSite(){
+ domainText = document.getElementById("domain").textContent;
+ console.log(domainText);
+  chrome.declarativeNetRequest.getDynamicRules({}, function(rules) {
+    console.log(rules)
+    for (let index = 0; index < rules.length; index++) {
+       if (rules[index].condition.urlFilter == domainText){
+          console.log(`unblocking ${domainText} with id ${rules[index].id}`)
+          chrome.declarativeNetRequest.updateDynamicRules({
+          removeRuleIds: [parseInt(rules[index].id)]
+      }, () => chrome.tabs.reload(tabId))
+       }
+  }  })
+
+}

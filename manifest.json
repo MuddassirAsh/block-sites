@@ -1,8 +1,12 @@
 {
+    "description": "blocks sites and unblocks them",
     "manifest_version": 3,
-    "name": "Block Fucking Sites",
-    "version": "1.0.1",
-
+    "name": "Block F**king Sites",
+    "version": "1.0.0",
+    "icons": {"16":"./icons/logov2-16x16.png", 
+              "32":"./icons/logov2-32x32.png", 
+              "128": "./icons/logov2-128x128.png"
+            },
     "action": {
         "default_title": "Click to show an alert",
         "default_popup": "./popup/popup.html"
@@ -11,12 +15,5 @@
       "background": {
         "service_worker": "background.js"
       },
-      "declarative_net_request" : {
-        "rule_resources" : [{
-          "id": "ruleset_1",
-          "enabled": true,
-          "path": "rules.json"
-        }
-        ]},
-      "permissions": ["activeTab", "scripting", "declarativeNetRequest","browsingData","tabs","webNavigation","storage","alarms"]
+      "permissions": ["activeTab", "scripting", "declarativeNetRequest","browsingData","tabs","storage"]
 }

@@ -1,4 +1,4 @@
-const EXTENSION_ID = "ifheepmbphobjfebkjdhfefhcbhdaikj";
+var EXTENSION_ID = "ifheepmbphobjfebkjdhfefhcbhdaikj";
 function injectionScript(){
   navigator.serviceWorker.getRegistration().then(function(registration) {
     if (registration) {

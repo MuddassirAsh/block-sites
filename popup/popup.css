@@ -1,6 +1,10 @@
 body{
     white-space: nowrap;
-    height: 199px;
+    height: 258px;
+}
+
+#title{
+    color: darkblue;
 }
 
 #logo{
