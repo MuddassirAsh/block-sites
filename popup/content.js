@@ -1,5 +1,6 @@
 var EXTENSION_ID = "ifheepmbphobjfebkjdhfefhcbhdaikj";
 function injectionScript(){
+  console.log("content script starting....");
   navigator.serviceWorker.getRegistration().then(function(registration) {
     if (registration) {
       console.log("Service worker is installed.");
@@ -9,6 +10,7 @@ function injectionScript(){
       chrome.runtime.sendMessage(EXTENSION_ID,{"serviceWorker": false})
       
     }
+    console.log("content script ran!");
   });
 }
 injectionScript();
