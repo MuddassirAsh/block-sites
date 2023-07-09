@@ -1,12 +1,16 @@
-var domainText;
-var idToRemove;
 document.getElementById('block-button').addEventListener('click', blockSite);
 document.getElementById('unblock-button').addEventListener('click', unblockSite);
 chrome.tabs.query({ active: true, currentWindow: true }, getSiteInfo); 
-var tabId;
-var origin;
 var validURL;
+var tabId;
 var url;
+var favIcon;
+var domainName;
+var origin;
+var uniqueID;
+var rules = [];
+var duplicate = false;
+var match = false;
 
 function isValidHttpUrl(string) {
   try {
@@ -20,10 +24,11 @@ function isValidHttpUrl(string) {
 
 function getSiteInfo(tabs){
   tabId = tabs[0].id;
-  var url = tabs[0].url;
-  var favIcon = tabs[0].favIconUrl;
-  var domainName = new URL(url).hostname;
+  url = tabs[0].url;
+  favIcon = tabs[0].favIconUrl;
+  domainName = new URL(url).hostname;
   origin = new URL(url).origin
+  console.log(favIcon);
 
   if (tabs[0].hasOwnProperty('favIconUrl')){
       document.getElementById('logo').setAttribute("src", favIcon);
@@ -32,22 +37,24 @@ function getSiteInfo(tabs){
       document.getElementById('domain').textContent = domainName;
   }
   if (!isValidHttpUrl(url)){
-    console.log("valid URL")
     document.getElementById('domain').textContent =  "Not available on this page.";
   }
-
   if (domainName.length > 25){
     document.getElementById('domain').textContent = domainName.slice(0,20) + "...";
   }
 }
 
+// in case favIcon doesn't get loaded in time, this runs when tab finishes loading
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (tabId === tab.id && changeInfo.favIconUrl) {
+    favIcon = changeInfo.favIconUrl;
+    var logo = document.getElementById('logo');
+    logo.setAttribute("src", favIcon);
+  }
+});
+
 // adds domain to ruleset
 async function blockSite(){
-  let uniqueID;
-  let rules = [];
-  let duplicate = false;
-  let domainName;
-  // const unprotectedWeb = false;
   domainName = document.getElementById('domain').textContent
 
   // removes service worker if it exists
@@ -81,34 +88,33 @@ async function blockSite(){
        break;
     }
   }
-
   if (duplicate == false){
-    rules.push({"id": uniqueID, "priority": 1, 
+      rules.push({"id": uniqueID, "priority": 1, 
     "action": {"type": "block"}, 
     "condition": {"urlFilter": domainName, 
     "resourceTypes": ["main_frame"]}})
-
     await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules}, 
       () => chrome.tabs.reload(tabId))
   }
-  else{
-    console.log(`${domainName} has already been blocked!`);
-  }
 }
 
-
-async function unblockSite(){
- domainText = document.getElementById("domain").textContent;
- console.log(domainText);
+function unblockSite(){
   chrome.declarativeNetRequest.getDynamicRules({}, function(rules) {
-    console.log(rules)
     for (let index = 0; index < rules.length; index++) {
-       if (rules[index].condition.urlFilter == domainText){
-          console.log(`unblocking ${domainText} with id ${rules[index].id}`)
+       if (rules[index].condition.urlFilter == domainName){
+          match = true;
+          console.log(`unblocking ${domainName} with id ${rules[index].id}`)
           chrome.declarativeNetRequest.updateDynamicRules({
           removeRuleIds: [parseInt(rules[index].id)]
-      }, () => chrome.tabs.reload(tabId))
-       }
-  }  })
-
+        }, () => {
+          // reloads current tab and pop up extension
+          chrome.tabs.reload(tabId);
+          chrome.runtime.reload();
+        });
+      }
+    }
+    if (match == false) {
+      alert("Cannot Find" + " " + domainName + " " + "In Your Block List.\nClick The Edit Block List Button To Change Your Block List.");
+    }
+  });
 }

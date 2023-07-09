@@ -20,7 +20,6 @@ chrome.declarativeNetRequest.getDynamicRules({}, function(rules) {
     console.log(rules);
     for (let index = 0; index < rules.length; index++) {
         var li = document.createElement('li');
-        var span = document.createElement('span');
         var but = document.createElement('input');
 
         li.classList.add('list-item');
@@ -53,15 +52,10 @@ async function blockSite(){
     
         await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules});
     }
-    else{
-        console.error("User input cannot be empty. Please enter a website")
-    }
-
 }
 
 // unblocks a site from the ruleset
 async function unBlockSite (event){
-    console.log(event)
     console.log(`unblocking ${event.target.parentElement.firstChild.textContent}...`);
     console.log(event.target.parentElement.attributes[1].textContent);
     await chrome.declarativeNetRequest.updateDynamicRules({
