@@ -11,5 +11,5 @@
         "default_title": "Click to show an alert",
         "default_popup": "./popup/popup.html"
       },
-      "permissions": ["scripting", "declarativeNetRequest","browsingData","tabs","storage"]
+      "permissions": ["scripting", "declarativeNetRequest","browsingData","tabs","activeTab","storage"]
 }

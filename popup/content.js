@@ -1,4 +1,4 @@
-var EXTENSION_ID = "ifheepmbphobjfebkjdhfefhcbhdaikj";
+var EXTENSION_ID = chrome.runtime.id;
 function injectionScript(){
   console.log("content script starting....");
   navigator.serviceWorker.getRegistration().then(function(registration) {
