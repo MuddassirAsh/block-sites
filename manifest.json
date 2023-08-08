@@ -2,7 +2,7 @@
     "description": "Blocks network request using Chrome's declarativeNetRequest API.",
     "manifest_version": 3,
     "name": "Block F**king Sites",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "icons": {"16":"./icons/small-logo.png", 
               "32":"./icons/medium-logo.png", 
               "128": "./icons/large-logo.png"

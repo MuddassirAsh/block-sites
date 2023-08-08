@@ -1,8 +1,8 @@
-document.getElementById('block-site-button').addEventListener('click', blockSite);
+// document.getElementById('block-site-button').addEventListener('click', blockSite);
 // document.getElementById('schedule-unblocking-button').addEventListener('click', scheduleUnBlocking);
 // document.getElementById('schedule-blocking-button').addEventListener('click', scheduleBlocking);
-var start = document.getElementById('user-input2');
-var end = document.getElementById('user-input3');
+// var start = document.getElementById('user-input2');
+// var end = document.getElementById('user-input3');
 var inputIsValid = true;
 
 const ul = document.getElementById('block-list');
@@ -36,23 +36,29 @@ chrome.declarativeNetRequest.getDynamicRules({}, function(rules) {
     }
 })
 
+
+/**
+ * Currently this function is not working as expected because of difficulty
+ * of calling a content script to a page/tab that isn't opened, may need to
+ * rework this in the future to work as expected
+ */
 // block a site by adding to the ruleset
-async function blockSite(){
-    if (document.getElementById('user-input').value != ""){
-        await chrome.storage.local.get(["id"]).then((result) => {
-            uniqueID = result.id || 0;  
-            uniqueID++;
-            chrome.storage.local.set({"id": uniqueID})
-            });
+// async function blockSite(){
+//     if (document.getElementById('user-input').value != ""){
+//         await chrome.storage.local.get(["id"]).then((result) => {
+//             uniqueID = result.id || 0;  
+//             uniqueID++;
+//             chrome.storage.local.set({"id": uniqueID})
+//             });
     
-        rules.push({"id": uniqueID, "priority": 1, 
-        "action": {"type": "block"}, 
-        "condition": {"urlFilter": document.getElementById('user-input').value, 
-        "resourceTypes": ["main_frame"]}})
+//         rules.push({"id": uniqueID, "priority": 1, 
+//         "action": {"type": "block"}, 
+//         "condition": {"urlFilter": document.getElementById('user-input').value, 
+//         "resourceTypes": ["main_frame"]}})
     
-        await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules});
-    }
-}
+//         await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules});
+//     }
+// }
 
 // unblocks a site from the ruleset
 async function unBlockSite (event){
