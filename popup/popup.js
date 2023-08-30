@@ -57,25 +57,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 async function blockSite(){
   domainName = document.getElementById('domain').textContent
 
-  // removes service worker if it exists
-  await chrome.scripting
-    .executeScript({
-      target : {tabId : tabId},
-      files : ["./popup/content.js" ]
-    })
-   
-  await chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
-    if (message.serviceWorker == true){
-      chrome.browsingData.removeServiceWorkers({origins:[origin]})
-    }
-  })
-
-  await chrome.storage.local.get(["id"]).then((result) => {
-    uniqueID = result.id || 0;  
-    uniqueID++;
-    chrome.storage.local.set({"id": uniqueID})
-  });
-
   // check if domain doesn't already exist in ruleset
   const dynamicRules = await new Promise((resolve,reject) => {
     chrome.declarativeNetRequest.getDynamicRules({}, function(rules) {
@@ -88,14 +69,39 @@ async function blockSite(){
        break;
     }
   }
-  if (duplicate == false){
+  try {
+    if (duplicate == false){
+      // removes service worker if it exists
+      await chrome.scripting
+        .executeScript({
+          target : {tabId : tabId},
+          files : ["./popup/content.js" ]
+        })
+      
+      await chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
+        if (message.serviceWorker == true){
+          chrome.browsingData.removeServiceWorkers({origins:[origin]})
+        }
+      })
+
+      await chrome.storage.local.get(["id"]).then((result) => {
+        uniqueID = result.id || 0;  
+        uniqueID++;
+        chrome.storage.local.set({"id": uniqueID})
+      });
+
       rules.push({"id": uniqueID, "priority": 1, 
-    "action": {"type": "block"}, 
-    "condition": {"urlFilter": domainName, 
-    "resourceTypes": ["main_frame"]}})
-    await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules}, 
-      () => chrome.tabs.reload(tabId))
+      "action": {"type": "block"}, 
+      "condition": {"urlFilter": domainName, 
+      "resourceTypes": ["main_frame"]}})
+      await chrome.declarativeNetRequest.updateDynamicRules({addRules: rules}, 
+        () => chrome.tabs.reload(tabId))
+    }
   }
+  catch(error){
+    console.log(error);
+  }
+
 }
 
 function unblockSite(){
