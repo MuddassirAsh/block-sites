@@ -1,5 +1,5 @@
 {
-    "description": "Blocks network request using Chrome's declarativeNetRequest API.",
+    "description": "Blocks sites using Chrome's declarativeNetRequest API.",
     "manifest_version": 3,
     "name": "Block F**king Sites",
     "version": "1.0.2",
