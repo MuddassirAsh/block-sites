@@ -1,16 +1,20 @@
 var EXTENSION_ID = chrome.runtime.id;
-function injectionScript(){
-  console.log("content script starting....");
-  navigator.serviceWorker.getRegistration().then(function(registration) {
+function injectionScript() {
+  if (location.protocol == "http:"){
+    chrome.runtime.sendMessage(EXTENSION_ID, {"serviceWorker": false});
+    return;
+  }
+
+  navigator.serviceWorker.getRegistration().then((registration) => {
     if (registration) {
-      console.log("Service worker is installed.");
-      chrome.runtime.sendMessage(EXTENSION_ID,{"serviceWorker": true})
-    } else {
-      console.log("Service worker is not installed.");
-      chrome.runtime.sendMessage(EXTENSION_ID,{"serviceWorker": false})
-      
+      chrome.runtime.sendMessage(EXTENSION_ID, {"serviceWorker": true});
+      console.log(Date.now());
     }
-    console.log("content script ran!");
+     else {
+      chrome.runtime.sendMessage(EXTENSION_ID, {"serviceWorker": false});
+      console.log(Date.now());
+     }
   });
 }
+
 injectionScript();
