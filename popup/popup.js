@@ -52,6 +52,7 @@ function isValidProtocol(protocol) {
   return protocol === "http" || protocol === "https";
 }
 
+
 async function addRule(origin, tabId){
   const rules = []
   const uniqueID = await generateUniqueID();
