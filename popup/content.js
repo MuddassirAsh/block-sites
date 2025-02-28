@@ -6,13 +6,12 @@ function injectionScript() {
   }
 
   navigator.serviceWorker.getRegistration().then((registration) => {
+    console.log(registration);
     if (registration) {
       chrome.runtime.sendMessage(EXTENSION_ID, {"serviceWorker": true});
-      console.log(Date.now());
     }
-     else {
+    else {
       chrome.runtime.sendMessage(EXTENSION_ID, {"serviceWorker": false});
-      console.log(Date.now());
      }
   });
 }

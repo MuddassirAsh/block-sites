@@ -22,9 +22,12 @@ async function populatePage() {
   const domainName = new URL(url).hostname;
   const protocol = tab[0].url.split([":"])[0];
 
-  if (tab[0].hasOwnProperty('favIconUrl'))
+  if (tab[0].hasOwnProperty('favIconUrl')){
     document.getElementById('logo').setAttribute("src", favIcon);
-
+    document.getElementById('logo').style.display = "block";
+    document.getElementById('logo').style.width = "12%";
+    document.getElementById('logo').style.marginRight = "2%";
+  }
   if (tab[0].hasOwnProperty('url'))
     document.getElementById('domain').textContent = domainName;
 
